@@ -1,10 +1,17 @@
 module EasyStocks
 
-# Write your package code here.
-function SolveModel()
-  println("testing")
-  α = fill(0.0,10,10)
+# Dependencies
+using Interpolations
+
+# Load files
+
+include("model/MainFunctions.jl")
+include("model/Structs.jl")
+
+# Export functions
+export SolveModel,
+       ModPar,
+       NumPar,
+       ModelSolution
 end
 
-export SolveModel
-end
