@@ -2,7 +2,7 @@ module EasyStocks
 
 # Dependencies
 using Base: AbstractFloat
-using Interpolations
+using Interpolations # To interpolate value function
 
 # Load files
 
