@@ -7,12 +7,12 @@ mutable struct ModPar
   μ :: Float64
 
   function ModPar(;
-    γ = 2.0,
+    γ = 1.01,
     β = 1.0,
     q = 0.0,
     r = 0.0,
-    σ = 0.1,
-    μ = 0.0,
+    σ = 0.16,
+    μ = 0.02,
   )
 
     new(γ, β, q, r, σ, μ)
@@ -30,29 +30,32 @@ struct NumPar
 
   xgrd :: Vector{Float64}
   hgrd :: Vector{Float64}
+  ygrd :: Vector{Float64}
 
   πrs :: Vector{Float64}
   rsgrd :: Vector{Float64}
 
   function NumPar(mp::ModPar;
-      nx=11,
+      nx=31,
       nh=11,
       na=2,
-      nq=5,
-      xmax=1.0,
+      nq=31,
+      xmax=4.0,
       hmax=1.0,)
 
 
     xgrd = range(0,stop=xmax,length=nx)
     hgrd = range(0,stop=xmax,length=nx)
+    ygrd = [0.0,1.0]
 
     # Use expectation package
     E = expectation(Normal(mp.μ,mp.σ),n=nq)
     rsgrd=nodes(E) # Return grid
+    rsgrd=max.(-1.0,rsgrd) # Limited liability
     πrs=weights(E) # PMF
     @assert sum(πrs)≈1 # Check that PMF sums to one
 
-    new(nx, nh, na, nq, xmax, hmax, xgrd, hgrd, πrs, rsgrd)
+    new(nx, nh, na, nq, xmax, hmax, xgrd, hgrd, ygrd, πrs, rsgrd)
   end
 end
 
