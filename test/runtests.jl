@@ -10,7 +10,7 @@ end
     @test try
         SolveModel()
         mp = ModPar()
-        np = NumPar()
+        np = NumPar(mp)
         ModelSolution(mp,np)
         true
     catch

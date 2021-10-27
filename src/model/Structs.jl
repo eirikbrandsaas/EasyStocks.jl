@@ -23,6 +23,7 @@ struct NumPar
   nx :: Int
   nh :: Int
   na :: Int
+  nq :: Int # How many points to use in quadrature
 
   xmax :: Float64
   hmax :: Float64
@@ -30,10 +31,14 @@ struct NumPar
   xgrd :: Vector{Float64}
   hgrd :: Vector{Float64}
 
-  function NumPar(;
+  πrs :: Vector{Float64}
+  rsgrd :: Vector{Float64}
+
+  function NumPar(mp::ModPar;
       nx=11,
       nh=11,
       na=2,
+      nq=5,
       xmax=1.0,
       hmax=1.0,)
 
@@ -41,7 +46,13 @@ struct NumPar
     xgrd = range(0,stop=xmax,length=nx)
     hgrd = range(0,stop=xmax,length=nx)
 
-    new(nx, nh, na, xmax, hmax, xgrd, hgrd)
+    # Use expectation package
+    E = expectation(Normal(mp.μ,mp.σ),n=nq)
+    rsgrd=nodes(E) # Return grid
+    πrs=weights(E) # PMF
+    @assert sum(πrs)≈1 # Check that PMF sums to one
+
+    new(nx, nh, na, nq, xmax, hmax, xgrd, hgrd, πrs, rsgrd)
   end
 end
 

@@ -1,6 +1,6 @@
 function SolveModel()
   mp = ModPar()
-  np = NumPar()
+  np = NumPar(mp)
   MS = ModelSolution(mp,np)
 
   LastPeriod!(MS)
