@@ -39,7 +39,7 @@ struct NumPar
   rsgrd :: Vector{Float64}
 
   function NumPar(mp::ModPar;
-      nx=101,
+      nx=51,
       nh=11,
       na=2,
       nq=11,
@@ -49,7 +49,7 @@ struct NumPar
 
     xgrd = range(0,stop=xmax,length=nx)
     hgrd = range(0,stop=xmax,length=nx)
-    ygrd = [0.5,0.5]
+    ygrd = [1.,1.]
 
     # Use expectation package
     E = expectation(Normal(mp.μ,mp.σ),n=nq)
