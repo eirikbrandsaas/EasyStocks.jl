@@ -1,7 +1,12 @@
+## Load everything
 using Pkg
 Pkg.activate(".")
 Pkg.instantiate()
 include("src/EasyStocks.jl")
+
+## Setup
+using CairoMakie # For plotting
+## Run-code
 
 @time MS = SolveModel()
 
