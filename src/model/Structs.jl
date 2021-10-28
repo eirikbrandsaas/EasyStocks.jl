@@ -27,6 +27,8 @@ struct NumPar
   nh :: Int
   na :: Int
   nq :: Int # How many points to use in quadrature
+  nα :: Int # α-choice grid density
+  nsav :: Int # savings-choice grid density
 
   xmax :: Float64
   hmax :: Float64
@@ -43,6 +45,8 @@ struct NumPar
       nh=11,
       na=2,
       nq=11,
+      nα=21,
+      nsav=51,
       xmax=8.0,
       hmax=1.0,)
 
@@ -58,7 +62,7 @@ struct NumPar
     πrs=weights(E) # PMF
     @assert sum(πrs)≈1 # Check that PMF sums to one
 
-    new(nx, nh, na, nq, xmax, hmax, xgrd, hgrd, ygrd, πrs, rsgrd)
+    new(nx, nh, na, nq, nα, nsav, xmax, hmax, xgrd, hgrd, ygrd, πrs, rsgrd)
   end
 end
 
