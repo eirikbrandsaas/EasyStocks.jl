@@ -27,9 +27,9 @@ function FirstPeriod!(MS::ModelSolution)
   np = MS.np
   mp = MS.mp
 
-  nchoice = np.nx*5
+  nchoice = np.nx*4
   savgrd = range(0.0,stop=np.xgrd[end],length=nchoice)
-  αgrd = range(0.0,stop=1.0,length=51)
+  αgrd = range(0.0,stop=1.0,length=21)
   vtmp = fill(0.0,(nchoice,length(αgrd)))
 
   ia = 1

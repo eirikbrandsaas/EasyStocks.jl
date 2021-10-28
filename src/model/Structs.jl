@@ -7,7 +7,7 @@ mutable struct ModPar
   μ :: Float64
 
   function ModPar(;
-    γ = 1.01,
+    γ = 2.0,
     β = 1.0,
     q = 0.0,
     r = 0.0,
@@ -36,17 +36,17 @@ struct NumPar
   rsgrd :: Vector{Float64}
 
   function NumPar(mp::ModPar;
-      nx=31,
+      nx=101,
       nh=11,
       na=2,
-      nq=31,
-      xmax=4.0,
+      nq=11,
+      xmax=8.0,
       hmax=1.0,)
 
 
     xgrd = range(0,stop=xmax,length=nx)
     hgrd = range(0,stop=xmax,length=nx)
-    ygrd = [0.0,1.0]
+    ygrd = [0.5,0.5]
 
     # Use expectation package
     E = expectation(Normal(mp.μ,mp.σ),n=nq)
