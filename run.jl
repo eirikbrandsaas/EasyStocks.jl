@@ -6,9 +6,12 @@ include("src/EasyStocks.jl")
 
 ## Setup
 using CairoMakie # For plotting
+mp = ModPar(q=0.00)
+np = NumPar(mp)
+MS = ModelSolution(mp,np)
 ## Run-code
 
-@time MS = SolveModel()
+@time SolveModel!(MS)
 
 fig = Figure()
 lines(fig[1,1],MS.np.xgrd, MS.α[:,1])
@@ -18,4 +21,5 @@ ylims!(-6,1)
 lines(fig[2,2],MS.np.xgrd, MS.V[:,2])
 lines(fig[2,1],MS.np.xgrd, MS.b[:,1] + MS.s[:,1])
 ylims!(-0.05,5)
+linkxaxes!(fig.content...)
 fig

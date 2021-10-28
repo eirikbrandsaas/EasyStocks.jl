@@ -8,10 +8,10 @@ end
 
 @testset "Make sure all functions run" begin
     @test try
-        SolveModel()
         mp = ModPar()
         np = NumPar(mp)
-        ModelSolution(mp,np)
+        MS = ModelSolution(mp,np)
+        SolveModel!(MS)
         true
     catch
         false

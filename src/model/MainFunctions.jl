@@ -1,7 +1,4 @@
-function SolveModel()
-  mp = ModPar()
-  np = NumPar(mp)
-  MS = ModelSolution(mp,np)
+function SolveModel!(MS::ModelSolution)
 
   LastPeriod!(MS)
   FirstPeriod!(MS)
