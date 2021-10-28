@@ -3,6 +3,7 @@ using Pkg
 Pkg.activate(".")
 Pkg.instantiate()
 include("src/EasyStocks.jl")
+include("test/runtests.jl")
 
 ## Setup
 using CairoMakie # For plotting
