@@ -55,6 +55,9 @@ function FirstPeriod!(MS::ModelSolution)
     MS.α[ix,ia] = α = αgrd[iα]
     MS.s[ix,ia] = s = savgrd[isav]*α
     MS.b[ix,ia] = b = savgrd[isav]*(1.0-α)
+    if savgrd[isav] == 0.0 # If there is no saving, portfolio weight is'nt defined
+      MS.α[ix,ia] = NaN64
+    end
     MS.c[ix,ia] = findc(xv,y,s,b,mp.q)
     MS.V[ix,ia] = vtmp[imax]
 
