@@ -44,7 +44,7 @@ struct NumPar
 
   function NumPar(mp::ModPar;
       nx=51,
-      nh=11,
+      nh=2,
       na=2,
       nq=11,
       nα=21,
@@ -54,7 +54,7 @@ struct NumPar
 
 
     xgrd = range(0,stop=xmax,length=nx)
-    hgrd = range(0,stop=xmax,length=nx)
+    hgrd = [1.0, 2.0]
     ygrd = [1.,1.]
 
     # Use expectation package
