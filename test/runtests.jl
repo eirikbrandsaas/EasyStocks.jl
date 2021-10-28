@@ -1,4 +1,4 @@
-using EasyStocks
+include("../src/EasyStocks.jl")
 using Test
 
 @testset "EasyStocks.jl" begin
