@@ -61,14 +61,17 @@ function FirstPeriod!(MS::ModelSolution)
 
 end
 
+" Find consumption as a function of choices"
 function findc(x,y,b,s,q) # Find todays consumption
   c = x + y - b - s - q*part(s)
 end
 
-function xp(b,s,r,rsgrd::Vector{Float64}) # Next period wealth
+"Takes portfolio choices and returns possible next period wealth"
+function xp(b,s,r,rsgrd::Vector{Float64})
   b*(1.0+r) .+ s*(1.0 .+ rsgrd)
 end
 
+"Returns true if household participates"
 function part(s::AbstractFloat) # Whether you are participating or not
   if s>0.0
       part = true
@@ -79,6 +82,7 @@ function part(s::AbstractFloat) # Whether you are participating or not
   return part
 end
 
+"Utility shifter as in Karlman, Kinnerud, Kragh-Soerensen (2021)"
 function KKKShifter(xstar::AbstractFloat, x::AbstractFloat,ψ::AbstractFloat)
   ψ*(x>xstar)
 end
