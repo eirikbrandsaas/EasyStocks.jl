@@ -7,6 +7,7 @@ mutable struct ModPar
   μ :: Float64
   ψ :: Float64
   xstar :: Float64
+  ms :: Float64
 
 
   function ModPar(;
@@ -18,9 +19,10 @@ mutable struct ModPar
     μ = 0.02,
     ψ = 0.0,
     xstar = 0.0,
+    ms = 0.0,
   )
 
-    new(γ, β, q, r, σ, μ, ψ, xstar)
+    new(γ, β, q, r, σ, μ, ψ, xstar, ms)
   end
 end
 
