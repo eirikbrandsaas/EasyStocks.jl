@@ -5,6 +5,8 @@ mutable struct ModPar
   r :: Float64
   σ :: Float64
   μ :: Float64
+  ψ :: Float64
+
 
   function ModPar(;
     γ = 2.0,
@@ -13,9 +15,10 @@ mutable struct ModPar
     r = 0.0,
     σ = 0.16,
     μ = 0.02,
+    ψ = 0.0,
   )
 
-    new(γ, β, q, r, σ, μ)
+    new(γ, β, q, r, σ, μ, ψ)
   end
 end
 
@@ -28,7 +31,7 @@ struct NumPar
   xmax :: Float64
   hmax :: Float64
 
-  xgrd :: Vector{Float64}
+  xgrd :: StepRangeLen{Float64}
   hgrd :: Vector{Float64}
   ygrd :: Vector{Float64}
 
