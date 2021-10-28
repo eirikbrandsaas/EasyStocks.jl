@@ -34,7 +34,7 @@ function FirstPeriod!(MS::ModelSolution)
 
   ia = 1
   y = np.ygrd[ia]
-  Vnxt_intrp = LinearInterpolation((np.xgrd,),MS.V[:,ia+1],extrapolation_bc=Interpolations.Line())
+  Vnxt_intrp = CubicSplineInterpolation((np.xgrd,),MS.V[:,ia+1],extrapolation_bc=Interpolations.Line())
   for (ix,xv) in enumerate(np.xgrd)
     vtmp .= -Inf64
     for (isav,sav) in enumerate(savgrd)
