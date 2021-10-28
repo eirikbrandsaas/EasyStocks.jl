@@ -16,7 +16,7 @@ function LastPeriod!(MS::ModelSolution)
     MS.s[ix,ia] = b = 0.0
     MS.b[ix,ia] = s = 0.0
     MS.c[ix,ia] = c = findc(xv,y,b,s,mp.q)
-    MS.V[ix,ia] = util(c,mp.γ)
+    MS.V[ix,ia] = util(c,mp.γ) + KKKShifter(mp.xstar,xv,mp.ψ)
   end
 end
 
@@ -78,3 +78,9 @@ function part(s::AbstractFloat) # Whether you are participating or not
 
   return part
 end
+
+function KKKShifter(xstar::AbstractFloat, x::AbstractFloat,ψ::AbstractFloat)
+  ψ*(x>xstar)
+end
+
+
