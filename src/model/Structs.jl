@@ -1,18 +1,20 @@
 mutable struct ModPar
-  γ :: Float64
-  β :: Float64
-  q :: Float64
-  r :: Float64
-  σ :: Float64
-  μ :: Float64
-  ψ :: Float64
-  xstar :: Float64
-  ms :: Float64
+  γ :: Float64 # RiskAversion
+  β :: Float64 # Discount
+  η :: Float64 # Weight on housing
+  q :: Float64 # Part. cost
+  r :: Float64 # Risk free rate
+  σ :: Float64 # Return std.dev
+  μ :: Float64 # Return mean
+  ψ :: Float64 # Utility shifter KKK
+  xstar :: Float64 # Shifter threshold KKK
+  ms :: Float64 # Sales cost
 
 
   function ModPar(;
     γ = 2.0,
     β = 1.0,
+    η = 0.5,
     q = 0.0,
     r = 0.0,
     σ = 0.16,
@@ -22,7 +24,7 @@ mutable struct ModPar
     ms = 0.0,
   )
 
-    new(γ, β, q, r, σ, μ, ψ, xstar, ms)
+    new(γ, β, η, q, r, σ, μ, ψ, xstar, ms)
   end
 end
 
