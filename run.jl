@@ -7,7 +7,7 @@ include("test/runtests.jl")
 
 ## Setup
 using CairoMakie # For plotting
-mp = ModPar(q=0.005,ψ=0.015,xstar=1.96)
+mp = ModPar(q=0.005,ψ=0.015,xstar=2.0)
 np = NumPar(mp)
 MS = ModelSolution(mp,np)
 ## Run-code
