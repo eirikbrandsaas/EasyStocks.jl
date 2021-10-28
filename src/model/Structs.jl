@@ -37,7 +37,7 @@ struct NumPar
   xmax :: Float64
   hmax :: Float64
 
-  xgrd :: StepRangeLen{Float64}
+  xgrd :: StepRangeLen{Float64,Base.TwicePrecision{Float64},Base.TwicePrecision{Float64}}
   hgrd :: Vector{Float64}
   ygrd :: Vector{Float64}
 
@@ -71,12 +71,12 @@ struct NumPar
 end
 
 mutable struct ModelSolution
-  V :: Array{Float64}
-  α :: Array{Float64}
-  b :: Array{Float64}
-  s :: Array{Float64}
-  h :: Array{Float64}
-  c :: Array{Float64}
+  V :: Array{Float64,2}
+  α :: Array{Float64,2}
+  b :: Array{Float64,2}
+  s :: Array{Float64,2}
+  h :: Array{Float64,2}
+  c :: Array{Float64,2}
   mp :: ModPar
   np :: NumPar
 
