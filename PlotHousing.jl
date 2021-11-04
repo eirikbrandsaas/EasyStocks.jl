@@ -15,7 +15,7 @@ MS1 = ModelSolution(mp1,np1)
 
 ## With housing or jump?
 # Jump:
-mp2 = ModPar(q=mp2.q,ψ=0.015,xstar=mp1.xstar,η =mp1.η,γ = mp1.γ)
+mp2 = ModPar(q=mp1.q,ψ=0.015,xstar=mp1.xstar,η =mp1.η,γ = mp1.γ)
 np2 = NumPar(mp1,nx=np1.nx,nsav=np1.nsav,nq=np1.nq,nα=np1.nα,nh=1,xmax=np1.xmax)
 # Housing:
 mp2 = ModPar(q=mp1.q,ψ=mp1.ψ,xstar=mp1.xstar,η =mp1.η,γ = mp1.γ)
