@@ -7,16 +7,16 @@ include("src/EasyStocks.jl")
 using CairoMakie # For plotting
 
 mp = ModPar(q=0.0,ψ=0.0,xstar=2.0,η=0.)
-np = NumPar(mp,nx=100,nsav=300,nq=41,nα=71,nh=1)
+np = NumPar(mp,nx=50,nsav=100,nq=31,nα=51,nh=1)
 MS1 = ModelSolution(mp,np)
 @time SolveModel!(MS1)
-mp = ModPar(q=0.00,ψ=0.015,xstar=2.0,η =0.0)
+mp = ModPar(q=mp.q,ψ=0.015,xstar=mp.xstar,η =mp.η)
 MS2 = ModelSolution(mp,np)
 @time SolveModel!(MS2)
 
-np.πrs[1] = 0.002
-np.πrs[:] = np.πrs/sum(np.πrs)
-MS3 = ModelSolution(mp,np)
+# np.πrs[1] = 0.002
+# np.πrs[:] = np.πrs/sum(np.πrs)
+# MS3 = ModelSolution(mp,np)
 # @time SolveModel!(MS3)
 ##
 fig = Figure()
