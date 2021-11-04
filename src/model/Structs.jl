@@ -58,7 +58,13 @@ struct NumPar
 
 
     xgrd = range(0,stop=xmax,length=nx)
-    hgrd = [1.0, 2.0]
+    if nh == 1
+      hgrd = [1.0]
+    elseif nh == 2
+      hgrd = [1.0, 2.0]
+    else
+      throw("No valid housing grid")
+    end
     ygrd = [1.,1.]
 
     # Use expectation package

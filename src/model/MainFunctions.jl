@@ -12,11 +12,21 @@ function LastPeriod!(MS::ModelSolution)
   mp = MS.mp
   ia = np.na
   y = np.ygrd[ia]
+  vtmp = fill(-Inf64,np.nh)
+  ctmp = fill(NaN64,np.nh)
   for (ix,xv) in enumerate(np.xgrd)
     MS.s[ix,ia] = b = 0.0
     MS.b[ix,ia] = s = 0.0
-    MS.c[ix,ia] = c = findc(xv,y,b,s,mp.q)
-    MS.V[ix,ia] = util(c,mp.γ) + KKKShifter(mp.xstar,xv,mp.ψ)
+    for (ih,hv) in enumerate(np.hgrd) # Find choices
+      ctmp[ih] = c = findc2(xv,y,b,s,mp.q,hv,np.hgrd[1])
+      if c > 0
+        vtmp[ih] = utilh(c,hv,mp.γ,mp.η) + KKKShifter(mp.xstar,xv,mp.ψ)
+      end
+    end
+    imax = argmax(vtmp)
+    MS.h[ix,ia] = np.hgrd[imax]
+    MS.c[ix,ia] = ctmp[imax]
+    MS.V[ix,ia] = vtmp[imax]
   end
 end
 
@@ -37,7 +47,7 @@ function FirstPeriod!(MS::ModelSolution)
       for (iα,α) in enumerate(αgrd)
         b = sav*(1.0-α)
         s = sav*α
-        c = findc(xv,y,b,s,mp.q)
+        c = findc1(xv,y,b,s,mp.q)
         if c > 0
           xpn = xp(b,s,mp.r,np.rsgrd)
           vtmp[isav,iα] = util(c,mp.γ) + mp.β*sum(np.πrs .* Vnxt_intrp.(xpn))
@@ -54,7 +64,7 @@ function FirstPeriod!(MS::ModelSolution)
     if savgrd[isav] == 0.0 # If there is no saving, portfolio weight is'nt defined
       MS.α[ix,ia] = NaN64
     end
-    MS.c[ix,ia] = findc(xv,y,s,b,mp.q)
+    MS.c[ix,ia] = findc1(xv,y,s,b,mp.q)
     MS.V[ix,ia] = vtmp[imax]
 
   end
@@ -62,7 +72,11 @@ function FirstPeriod!(MS::ModelSolution)
 end
 
 " Find consumption as a function of choices"
-function findc(x,y,b,s,q) # Find todays consumption
+function findc2(x,y,b,s,q,h,hmin) # Find todays consumption
+  c = x + y - b - s - q*part(s) - (h-hmin) # First unit of housing is free :)
+end
+
+function findc1(x,y,b,s,q) # Find todays consumption
   c = x + y - b - s - q*part(s)
 end
 
