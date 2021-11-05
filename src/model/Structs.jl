@@ -57,7 +57,7 @@ struct NumPar
       hmax=1.0,)
 
 
-    xgrd = range(0,stop=xmax,length=nx)
+    xgrd = range(0.1,stop=xmax,length=nx)
     if nh == 1
       hgrd = [1.0]
     elseif nh == 2
