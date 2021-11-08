@@ -7,7 +7,7 @@ include("src/EasyStocks.jl")
 ## Setup
 using CairoMakie # For plotting
 
-mp1 = ModPar(q=0.005,ψ=0.015,xstar=.0,η=0.5)
+mp1 = ModPar(q=0.005,ψ=0.0,xstar=.0,η=0.5)
 mp1.γ = 2 + 1/(1-mp1.η)
 np1 = NumPar(mp1,nx=100,nsav=150,nq=5,nα=101,nh=1,xmax=10)
 MS1 = ModelSolution(mp1,np1)
@@ -47,10 +47,12 @@ lines!(s3,MS2.s[:,1] + MS2.b[:,1],color=:orange,)
 
 lines!(h2,MS1.np.xgrd,MS1.h[:,2],linestyle=:dash,color=:gray,)
 lines!(h2,MS2.np.xgrd,MS2.h[:,2],color=:orange,)
+lines!(h2,MS2.np.xgrd,MS3.h[:,2],color=:black,)
 ylims!(h2,0.5,2.5)
 
 lines!(v2,MS1.np.xgrd,MS1.V[:,2],linestyle=:dash,color=:gray,)
 lines!(v2,MS2.np.xgrd,MS2.V[:,2],color=:orange,)
+lines!(v2,MS3.np.xgrd,MS3.V[:,2],color=:black,)
 
 # rowsize!(g2,2,Relative(1.33))
 
@@ -65,8 +67,8 @@ ylims!(ax2,-0.05,1.05)
 # text!(ax2, "Stay safe \nfor housing\n↓", position=(3.8,0.2),align=(:left,:center))
 # text!(ax2, "Gradually re-enter\n↓", position=(4.7,0.8),align=(:left,:center))
 
-lines!(ax3,MS2.np.xgrd, MS2.α[:,1],)
-lines!(ax3,MS2.np.xgrd, MS3.α[:,1],)
+lines!(ax3,MS2.np.xgrd, MS2.α[:,1],color=:orange)
+lines!(ax3,MS2.np.xgrd, MS3.α[:,1],color=:black)
 ylims!(ax3,-0.05,1.05)
 
 fig
