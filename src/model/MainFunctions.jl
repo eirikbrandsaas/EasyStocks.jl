@@ -102,3 +102,13 @@ function KKKShifter(xstar::AbstractFloat, x::AbstractFloat,ψ::AbstractFloat)
 end
 
 
+function SalesCost(ih::Integer,ihn::Integer,κ::AbstractFloat)
+  if ihn != ih
+    cost = κ
+  else
+    cost = 0.0
+  end
+
+  return cost
+end
+
