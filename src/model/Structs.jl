@@ -79,22 +79,22 @@ struct NumPar
 end
 
 mutable struct ModelSolution
-  V :: Array{Float64,2}
+  V :: Array{Float64,3}
   α :: Array{Float64,2}
   b :: Array{Float64,2}
   s :: Array{Float64,2}
-  h :: Array{Float64,2}
-  c :: Array{Float64,2}
+  h :: Array{Float64,3}
+  c :: Array{Float64,3}
   mp :: ModPar
   np :: NumPar
 
   function ModelSolution(mp::ModPar,np::NumPar)
-    V = fill(-Inf64,(np.nx,np.na))
-    α = fill(-Inf64,(np.nx,np.na))
-    b = fill(-Inf64,(np.nx,np.na))
-    s = fill(-Inf64,(np.nx,np.na))
-    h = fill(-Inf64,(np.nx,np.na))
-    c = fill(-Inf64,(np.nx,np.na))
+    V = fill(-Inf64,(np.nx,np.nh,np.na))
+    α = fill(-Inf64,(np.nx,np.nh))
+    b = fill(-Inf64,(np.nx,np.nh))
+    s = fill(-Inf64,(np.nx,np.nh))
+    h = fill(-Inf64,(np.nx,np.nh,np.na))
+    c = fill(-Inf64,(np.nx,np.nh,np.na))
 
     new(V, α, b, s, h, c, mp, np)
   end

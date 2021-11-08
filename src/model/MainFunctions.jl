@@ -15,18 +15,20 @@ function LastPeriod!(MS::ModelSolution)
   vtmp = fill(-Inf64,np.nh)
   ctmp = fill(NaN64,np.nh)
   for (ix,xv) in enumerate(np.xgrd)
-    MS.s[ix,ia] = b = 0.0
-    MS.b[ix,ia] = s = 0.0
-    for (ih,hv) in enumerate(np.hgrd) # Find choices
-      ctmp[ih] = c = findc2(xv,y,b,s,mp.q,hv,np.hgrd[1])
+    for ih in eachindex(np.hgrd)
+    b = 0.0
+    s = 0.0
+    for (ihn,hv) in enumerate(np.hgrd) # Find choices
+      ctmp[ihn] = c = findc2(xv,y,b,s,mp.q,hv,np.hgrd[1])
       if c > 0
-        vtmp[ih] = utilh(c,hv,mp.γ,mp.η) + KKKShifter(mp.xstar,xv,mp.ψ)
+        vtmp[ihn] = utilh(c,hv,mp.γ,mp.η) + KKKShifter(mp.xstar,xv,mp.ψ)
       end
     end
     imax = argmax(vtmp)
-    MS.h[ix,ia] = np.hgrd[imax]
-    MS.c[ix,ia] = ctmp[imax]
-    MS.V[ix,ia] = vtmp[imax]
+    MS.h[ix,ih,ia] = np.hgrd[imax]
+    MS.c[ix,ih,ia] = ctmp[imax]
+    MS.V[ix,ih,ia] = vtmp[imax]
+    end
   end
 end
 
@@ -40,7 +42,8 @@ function FirstPeriod!(MS::ModelSolution)
 
   ia = 1
   y = np.ygrd[ia]
-  Vnxt_intrp = CubicSplineInterpolation((np.xgrd,),MS.V[:,ia+1],extrapolation_bc=Interpolations.Line())
+  for ih in eachindex(np.hgrd)
+    Vnxt_intrp = CubicSplineInterpolation((np.xgrd,),MS.V[:,ih,ia+1],extrapolation_bc=Interpolations.Line())
   for (ix,xv) in enumerate(np.xgrd)
     vtmp .= -Inf64
     for (isav,sav) in enumerate(savgrd)
@@ -58,15 +61,15 @@ function FirstPeriod!(MS::ModelSolution)
     imax = argmax(vtmp)
     isav = imax[1]
     iα = imax[2]
-    MS.α[ix,ia] = α = αgrd[iα]
-    MS.s[ix,ia] = s = savgrd[isav]*α
-    MS.b[ix,ia] = b = savgrd[isav]*(1.0-α)
+    MS.α[ix,ih] = α = αgrd[iα]
+    MS.s[ix,ih] = s = savgrd[isav]*α
+    MS.b[ix,ih] = b = savgrd[isav]*(1.0-α)
     if savgrd[isav] == 0.0 # If there is no saving, portfolio weight is'nt defined
-      MS.α[ix,ia] = NaN64
+      MS.α[ix,ih] = NaN64
     end
-    MS.c[ix,ia] = findc1(xv,y,s,b,mp.q)
-    MS.V[ix,ia] = vtmp[imax]
-
+    MS.c[ix,ih,ia] = findc1(xv,y,s,b,mp.q)
+    MS.V[ix,ih,ia] = vtmp[imax]
+  end
   end
 
 end
