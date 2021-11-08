@@ -27,7 +27,7 @@ MS2 = ModelSolution(mp2,np2)
 @time SolveModel!(MS2)
 
 np2.πrs[1] += 0.005
-np2.πrs[:] = np2.πrs/sum(np.πrs)
+np2.πrs[:] = np2.πrs/sum(np2.πrs)
 MS3 = ModelSolution(mp2,np2)
 @time SolveModel!(MS3)
 ##
