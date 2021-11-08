@@ -21,7 +21,7 @@ function LastPeriod!(MS::ModelSolution)
     for (ihn,hv) in enumerate(np.hgrd) # Find choices
       ms = SalesCost(ih,ihn,mp.ms)
       xtmp = xv-ms
-      ctmp[ihn] = c = findc2(xtmp,y,b,s,mp.q,hv,np.hgrd[end])
+      ctmp[ihn] = c = findc2(xtmp,y,b,s,mp.q,hv,np.hgrd[1])
       if c > 0
         vtmp[ihn] = utilh(c,hv,mp.γ,mp.η) + KKKShifter(mp.xstar,xv,mp.ψ)
       end
