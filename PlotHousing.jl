@@ -8,13 +8,13 @@ include("src/EasyStocks.jl")
 using CairoMakie # For plotting
 
 ## Solve
-mp1 = ModPar(q=0.005,ψ=0.0,xstar=.0,η=0.5)
-mp1.γ = 2 + 1/(1-mp1.η)
-np1 = NumPar(mp1,nx=100,nsav=150,nq=5,nα=101,nh=1,xmax=10)
+mp1 = ModPar(q=0.003,ψ=0.0,xstar=.0,η=0.5)
+mp1.γ = 1 + 1/(1-mp1.η)
+np1 = NumPar(mp1,nx=100,nsav=100,nq=9,nα=51,nh=1,xmax=10)
 MS1 = ModelSolution(mp1,np1)
 @time SolveModel!(MS1)
 
-## With housing or jump?
+# With housing or jump?
 # Jump:
 mp2 = ModPar(q=mp1.q,ψ=0.015,xstar=mp1.xstar,η =mp1.η,γ = mp1.γ)
 np2 = NumPar(mp1,nx=np1.nx,nsav=np1.nsav,nq=np1.nq,nα=np1.nα,nh=1,xmax=np1.xmax)
@@ -27,11 +27,10 @@ np2.hgrd[2] = 3.0
 MS2 = ModelSolution(mp2,np2)
 @time SolveModel!(MS2)
 
-np2.πrs[1] += 0.005
-np2.πrs[:] = np2.πrs/sum(np2.πrs)
+mp2.ms=0.3
 MS3 = ModelSolution(mp2,np2)
 @time SolveModel!(MS3)
-##
+#
 fig = Figure()
 g2 = fig[1,1] = GridLayout()
 g1 = fig[2,1] = GridLayout()
@@ -75,35 +74,35 @@ ylims!(ax2,-0.05,1.05)
 # text!(ax2, "Stay safe \nfor housing\n↓", position=(3.8,0.2),align=(:left,:center))
 # text!(ax2, "Gradually re-enter\n↓", position=(4.7,0.8),align=(:left,:center))
 
-ih = 1
+ih = 2
 lines!(ax3,MS2.np.xgrd, MS2.α[:,ih],color=:orange)
 lines!(ax3,MS2.np.xgrd, MS3.α[:,ih],color=:black)
 ylims!(ax3,-0.05,1.05)
 
 fig
-## Run-code
+# ## Run-code
 
-fig = Figure()
-ax1 = Axis(fig[1,1])
-MS = MS1
-hitp = LinearInterpolation(MS.np.xgrd,MS2.h[:,2],extrapolation_bc=Flat())
+# fig = Figure()
+# ax1 = Axis(fig[1,1])
+# MS = MS1
+# hitp = LinearInterpolation(MS.np.xgrd,MS2.h[:,2],extrapolation_bc=Flat())
 
-probh2 = fill(-1.0,MS.np.nx)
-for ix in eachindex(MS.np.xgrd)
-  xns = MS.s[ix,1]*(1.0.+MS.np.rsgrd) .+ MS.b[ix,1] *(1.0 + MS.mp.r)
-  probh2[ix] = sum(MS.np.πrs.*(hitp.(xns).==MS2.np.hgrd[2]))
-end
+# probh2 = fill(-1.0,MS.np.nx)
+# for ix in eachindex(MS.np.xgrd)
+#   xns = MS.s[ix,1]*(1.0.+MS.np.rsgrd) .+ MS.b[ix,1] *(1.0 + MS.mp.r)
+#   probh2[ix] = sum(MS.np.πrs.*(hitp.(xns).==MS2.np.hgrd[2]))
+# end
 
-scatter!(ax1,probh2)
+# scatter!(ax1,probh2)
 
-MS = MS2
-hitp = LinearInterpolation(MS2.np.xgrd,MS.h[:,2],extrapolation_bc=Flat())
+# MS = MS2
+# hitp = LinearInterpolation(MS2.np.xgrd,MS.h[:,2],extrapolation_bc=Flat())
 
-probh2 = fill(-1.0,MS.np.nx)
-for ix in eachindex(MS.np.xgrd)
-  xns = MS.s[ix,1]*(1.0.+MS.np.rsgrd) .+ MS.b[ix,1] *(1.0 + MS.mp.r)
-  probh2[ix] = sum(MS.np.πrs.*(hitp.(xns).==MS2.np.hgrd[2]))
-end
+# probh2 = fill(-1.0,MS.np.nx)
+# for ix in eachindex(MS.np.xgrd)
+#   xns = MS.s[ix,1]*(1.0.+MS.np.rsgrd) .+ MS.b[ix,1] *(1.0 + MS.mp.r)
+#   probh2[ix] = sum(MS.np.πrs.*(hitp.(xns).==MS2.np.hgrd[2]))
+# end
 
-scatter!(ax1,probh2.+1.0)
-fig
+# scatter!(ax1,probh2.+1.0)
+# fig
