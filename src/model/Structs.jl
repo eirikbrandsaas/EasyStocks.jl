@@ -54,7 +54,8 @@ struct NumPar
       nα=21,
       nsav=51,
       xmax=8.0,
-      hmax=1.0,)
+      hmax=1.0,
+      ygrd=[1.0,1.0])
 
 
     xgrd = range(0.1,stop=xmax,length=nx)
@@ -65,7 +66,6 @@ struct NumPar
     else
       throw("No valid housing grid")
     end
-    ygrd = [1.,1.]
 
     # Use expectation package
     E = expectation(Normal(mp.μ,mp.σ),n=nq)

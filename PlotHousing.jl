@@ -8,26 +8,27 @@ include("src/EasyStocks.jl")
 using CairoMakie # For plotting
 
 ## Solve
-mp1 = ModPar(q=0.003,ψ=0.0,xstar=.0,η=0.5)
-mp1.γ = 1 + 1/(1-mp1.η)
-np1 = NumPar(mp1,nx=100,nsav=100,nq=9,nα=51,nh=1,xmax=10)
+mp1 = ModPar(q=0.003,ψ=0.0,xstar=.0,η=0.25)
+mp1.γ = 3 + 1/(1-mp1.η)
+np1 = NumPar(mp1,nx=100,nsav=100,nq=9,nα=51,nh=1,xmax=10,ygrd=[0.,4.0])
+np1.hgrd[:] .= 1.
 MS1 = ModelSolution(mp1,np1)
 @time SolveModel!(MS1)
 
 # With housing or jump?
 # Jump:
 mp2 = ModPar(q=mp1.q,ψ=0.015,xstar=mp1.xstar,η =mp1.η,γ = mp1.γ)
-np2 = NumPar(mp1,nx=np1.nx,nsav=np1.nsav,nq=np1.nq,nα=np1.nα,nh=1,xmax=np1.xmax)
+np2 = NumPar(mp1,nx=np1.nx,nsav=np1.nsav,nq=np1.nq,nα=np1.nα,nh=1,xmax=np1.xmax,ygrd=np1.ygrd)
 # Housing:
 mp2 = ModPar(q=mp1.q,ψ=mp1.ψ,xstar=mp1.xstar,η =mp1.η,γ = mp1.γ)
-np2 = NumPar(mp2,nx=np1.nx,nsav=np1.nsav,nq=np1.nq,nα=np1.nα,nh=2,xmax=np1.xmax)
+np2 = NumPar(mp2,nx=np1.nx,nsav=np1.nsav,nq=np1.nq,nα=np1.nα,nh=2,xmax=np1.xmax,ygrd=np1.ygrd)
 
-np2.hgrd[1] = 1.
-np2.hgrd[2] = 3.0
+np2.hgrd[:] .= 2.
 MS2 = ModelSolution(mp2,np2)
 @time SolveModel!(MS2)
 
 mp2.ms=0.3
+np2.hgrd[:] .= [1.0, 2.0]
 MS3 = ModelSolution(mp2,np2)
 @time SolveModel!(MS3)
 #
@@ -55,9 +56,10 @@ ylims!(h2,0.5,2.5)
 
 ia = 2
 ih = 1
-lines!(v2,MS1.np.xgrd,MS1.V[:,1,ia],linestyle=:dash,color=:gray,)
 lines!(v2,MS2.np.xgrd,MS2.V[:,1,ia],color=:orange,)
 lines!(v2,MS3.np.xgrd,MS3.V[:,1,ia],color=:black,)
+lines!(v2,MS1.np.xgrd,MS1.V[:,1,ia],linestyle=:dash,color=:gray,)
+ylims!(v2,minimum(MS2.V[:,1,ia]),maximum(MS3.V[:,1,ia]))
 
 # rowsize!(g2,2,Relative(1.33))
 
