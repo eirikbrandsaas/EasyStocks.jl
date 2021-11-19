@@ -21,7 +21,7 @@ function LastPeriod!(MS::ModelSolution)
     for (ihn,hv) in enumerate(np.hgrd) # Find choices
       ms = SalesCost(ih,ihn,mp.ms)
       xtmp = xv-ms
-      ctmp[ihn] = c = findc2(xtmp,y,b,s,mp.q,hv,np.hgrd[1])
+      ctmp[ihn] = c = findc2(xtmp,y,b,s,mp.q,hv)
       if c > 0
         vtmp[ihn] = utilh(c,hv,mp.γ,mp.η) + KKKShifter(mp.xstar,xv,mp.ψ)
       end
@@ -77,8 +77,8 @@ function FirstPeriod!(MS::ModelSolution)
 end
 
 " Find consumption as a function of choices"
-function findc2(x,y,b,s,q,h,hmin) # Find todays consumption
-  c = x + y - b - s - q*part(s) - (h-hmin) # First unit of housing is free :)
+function findc2(x,y,b,s,q,h) # Find second period consumption (subtract housing)
+  c = findc1(x,y,b,s,q) - h
 end
 
 function findc1(x,y,b,s,q) # Find todays consumption
