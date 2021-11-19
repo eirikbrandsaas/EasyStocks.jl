@@ -21,7 +21,7 @@ function LastPeriod!(MS::ModelSolution)
     for (ihn,hv) in enumerate(np.hgrd) # Find choices
       ms = SalesCost(ih,ihn,mp.ms)
       xtmp = xv-ms
-      ctmp[ihn] = c = findc2(xtmp,y,b,s,mp.q,hv,np.hgrd[1])
+      ctmp[ihn] = c = findc2(xtmp,y,b,s,mp.q,hv)
       if c > 0
         vtmp[ihn] = utilh(c,hv,mp.γ,mp.η) + KKKShifter(mp.xstar,xv,mp.ψ)
       end
@@ -38,9 +38,8 @@ function FirstPeriod!(MS::ModelSolution)
   np = MS.np
   mp = MS.mp
 
-  savgrd = range(0.0,stop=np.xgrd[end],length=np.nsav)
   αgrd = range(0.0,stop=1.0,length=np.nα)
-  vtmp = fill(0.0,(np.nsav,np.nα))
+  vtmp = fill(0.0,(np.nα))
 
   ia = 1
   y = np.ygrd[ia]
@@ -48,28 +47,24 @@ function FirstPeriod!(MS::ModelSolution)
     Vnxt_intrp = CubicSplineInterpolation((np.xgrd,),MS.V[:,ih,ia+1],extrapolation_bc=Interpolations.Line())
   for (ix,xv) in enumerate(np.xgrd)
     vtmp .= -Inf64
-    for (isav,sav) in enumerate(savgrd)
+    xval = xv + y
       for (iα,α) in enumerate(αgrd)
-        b = sav*(1.0-α)
-        s = sav*α
-        c = findc1(xv,y,b,s,mp.q)
-        if c > 0
+        b = xval*(1.0-α)
+        s = xval*α
+        if (b>0) && (s>0)
           xpn = xp(b,s,mp.r,np.rsgrd)
-          vtmp[isav,iα] = util(c,mp.γ) + mp.β*sum(np.πrs .* Vnxt_intrp.(xpn))
+          vtmp[iα] = mp.β*sum(np.πrs .* Vnxt_intrp.(xpn))
         end
-      end
     end
 
     imax = argmax(vtmp)
-    isav = imax[1]
-    iα = imax[2]
+    iα = imax
     MS.α[ix,ih] = α = αgrd[iα]
-    MS.s[ix,ih] = s = savgrd[isav]*α
-    MS.b[ix,ih] = b = savgrd[isav]*(1.0-α)
-    if savgrd[isav] == 0.0 # If there is no saving, portfolio weight is'nt defined
+    MS.s[ix,ih] = s = xval*α
+    MS.b[ix,ih] = b = xval*(1.0-α)
+    if xv == 0.0 # If there is no saving, portfolio weight is'nt defined
       MS.α[ix,ih] = NaN64
     end
-    MS.c[ix,ih,ia] = findc1(xv,y,s,b,mp.q)
     MS.V[ix,ih,ia] = vtmp[imax]
   end
   end
@@ -77,8 +72,8 @@ function FirstPeriod!(MS::ModelSolution)
 end
 
 " Find consumption as a function of choices"
-function findc2(x,y,b,s,q,h,hmin) # Find todays consumption
-  c = x + y - b - s - q*part(s) - (h-hmin) # First unit of housing is free :)
+function findc2(x,y,b,s,q,h) # Find second period consumption (subtract housing)
+  c = findc1(x,y,b,s,q) - h
 end
 
 function findc1(x,y,b,s,q) # Find todays consumption
