@@ -54,8 +54,10 @@ function FirstPeriod!(MS::ModelSolution)
         s = sav*α
         c = findc1(xv,y,b,s,mp.q)
         if c > 0
-          xpn = xp(b,s,mp.r,np.rsgrd)
-          vtmp[isav,iα] = util(c,mp.γ) + mp.β*sum(np.πrs .* Vnxt_intrp.(xpn))
+          vtmp[isav,iα] = util(c,mp.γ)
+          for irs = 1:np.nq
+            vtmp[isav,iα] += mp.β*np.πrs[irs]*Vnxt_intrp(xp(b,s,mp.r,np.rsgrd[irs]))
+          end
         end
       end
     end
@@ -86,8 +88,8 @@ function findc1(x,y,b,s,q) # Find todays consumption
 end
 
 "Takes portfolio choices and returns possible next period wealth"
-function xp(b,s,r,rsgrd::Vector{Float64})
-  b*(1.0+r) .+ s*(1.0 .+ rsgrd)
+function xp(b,s,r,rs::Float64)
+  b*(1.0+r) .+ s*(1.0 + rs)
 end
 
 "Returns true if household participates"
