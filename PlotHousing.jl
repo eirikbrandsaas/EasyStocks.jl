@@ -10,7 +10,7 @@ using CairoMakie # For plotting
 ## Solve
 h1 = 1.0
 h2 = 2.0
-y2 = 3.
+y2 = 3.0
 mp1 = ModPar(q=0.003,ψ=0.0,xstar=.0,η=0.3)
 mp1.γ = 2 + 1/(1-mp1.η)
 np1 = NumPar(mp1,nx=101,nsav=101,nq=31,nα=101,nh=1,xmax=10,ygrd=[0.,y2])
