@@ -8,7 +8,7 @@ include("src/EasyStocks.jl")
 using CairoMakie # For plotting
 
 mp = ModPar(q=0.0,ψ=0.0,xstar=2.0,η=0.)
-np = NumPar(mp,nx=100,nsav=100,nq=51,nα=51,nh=1,ygrd=[1.0,2.0])
+np = NumPar(mp,nx=60,nsav=120,nq=15,nα=81,nh=1,ygrd=[1.0,2.0])
 MS1 = ModelSolution(mp,np)
 @time SolveModel!(MS1)
 mp = ModPar(q=mp.q,ψ=0.015,xstar=mp.xstar,η =mp.η)
@@ -19,43 +19,36 @@ MS2 = ModelSolution(mp,np)
 # np.πrs[:] = np.πrs/sum(np.πrs)
 # MS3 = ModelSolution(mp,np)
 # @time SolveModel!(MS3)
-#
+##
 fig = Figure()
 g2 = fig[1,1] = GridLayout()
 g1 = fig[2,1] = GridLayout()
-ax1  = Axis(g1[1,1],xlabel = "", ylabel = "α")
-ax2  = Axis(g1[2,1],xlabel = "", ylabel = "α")
 
-v2 = Axis(g2[1,1], xlabel ="", ylabel = "Utils")
-h2 = Axis(g2[1,2], xlabel ="", ylabel = "Housing")
+ax2  = Axis(g1[1,1],xlabel = "Wealth", ylabel = "α")
+v2 = Axis(g2[1,1], xlabel ="Wealth", ylabel = "Utils")
+v1 = Axis(g2[1,2], xlabel ="Wealth", ylabel = "Utils")
 
-lines!(h2,np.xgrd,MS1.h[:,1,2],linestyle=:dash,color=:gray,)
-lines!(h2,np.xgrd,MS2.h[:,1,2],color=:orange,)
-ylims!(h2,0.5,2.5)
+lines!(v1,np.xgrd,MS1.V[:,1,1],linestyle=:dash,color=:gray,label="Benchmark")
+lines!(v1,np.xgrd,MS2.V[:,1,1],color=:orange,label="Housing")
+
 
 lines!(v2,np.xgrd,MS1.V[:,1,2],linestyle=:dash,color=:gray,)
 lines!(v2,np.xgrd,MS2.V[:,1,2],color=:orange,)
-# ax3  = Axis(g1[3,1],xlabel = "", ylabel = "α")
 
-# rowsize!(g2,2,Relative(1.33))
-# axt  = Axis(fig[4,1],xlabel = "Wealth (w2)", ylabel = "Utils")
-# lines!(axt,MS1.np.xgrd, MS1.V[:,2])
-# Label(fig[4, 1, Top()], "Portfolio weight on stocks without housing", valign = :bottom)
-
-lines!(ax1,MS1.np.xgrd, MS1.α[:,1,1])
-ylims!(ax1,-0.05,1.05)
-# text!(ax1, "Not willing\nto pay cost \n ↓", position=(0.0,0.5),align=(:left,:center))
-
-lines!(ax2,MS2.np.xgrd, MS1.α[:,1,1], linestyle=:dash,color=:gray,)
+lines!(ax2,MS2.np.xgrd, MS1.α[:,1,1], linestyle=:dash,color=:gray)
 lines!(ax2,MS2.np.xgrd, MS2.α[:,1,1], color=:orange)
 ylims!(ax2,-0.05,1.05)
-text!(ax2, "↑\n Gambling\n for housing", position=(3.2,0.2),align=(:right,:center))
-text!(ax2, "Stay safe \nfor housing\n↓", position=(3.8,0.2),align=(:left,:center))
-text!(ax2, "Gradually re-enter\n↓", position=(4.7,0.8),align=(:left,:center))
+text!(ax2, "↑\n Gambling\n for housing", position=(3.4,0.3),align=(:right,:center))
+text!(ax2, "Stay safe \nfor housing\n↓", position=(4.,0.3),align=(:left,:center))
+text!(ax2, "Gradually \nre-enter\n↓", position=(4.9,0.8),align=(:left,:center))
 
 # lines!(ax3,MS2.np.xgrd, MS2.α[:,1],)
 # lines!(ax3,MS2.np.xgrd, MS3.α[:,1],)
 # ylims!(ax3,-0.05,1.05)
+#leg = Legend(g1[1, 2], ax2)    
+axislegend(v1,position=:rb)
+Label(g2[1, 1, Top()], "Second Period Value Function", valign = :bottom,)
+Label(g2[1, 2, Top()], "First Period Value Function", valign = :bottom,)
 
 fig
 ## Run-code
