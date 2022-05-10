@@ -37,7 +37,7 @@ lines!(v2,np.xgrd,MS2.V[:,1,2],color=:orange,)
 
 lines!(ax2,MS2.np.xgrd, MS1.α[:,1,1], linestyle=:dash,color=:gray)
 lines!(ax2,MS2.np.xgrd, MS2.α[:,1,1], color=:orange)
-ylims!(ax2,-0.05,1.05)
+ylims!(ax2,(-0.05,1.05))
 text!(ax2, "↑\n Gambling\n for housing", position=(3.4,0.3),align=(:right,:center))
 text!(ax2, "Stay safe \nfor housing\n↓", position=(4.,0.3),align=(:left,:center))
 text!(ax2, "Gradually \nre-enter\n↓", position=(4.9,0.8),align=(:left,:center))
