@@ -46,6 +46,8 @@ struct NumPar
   πrs :: Vector{Float64}
   rsgrd :: Vector{Float64}
 
+  p1cons :: Bool
+
   function NumPar(mp::ModPar;
       nx=51,
       nh=2,
@@ -55,7 +57,9 @@ struct NumPar
       nsav=51,
       xmax=8.0,
       hmax=1.0,
-      ygrd=[1.0,1.0])
+      ygrd=[1.0,1.0],
+      p1cons=true,
+      )
 
 
     xgrd = range(0.1,stop=xmax,length=nx)
@@ -74,7 +78,7 @@ struct NumPar
     πrs=weights(E) # PMF
     @assert sum(πrs)≈1 # Check that PMF sums to one
 
-    new(nx, nh, na, nq, nα, nsav, xmax, hmax, xgrd, hgrd, ygrd, πrs, rsgrd)
+    new(nx, nh, na, nq, nα, nsav, xmax, hmax, xgrd, hgrd, ygrd, πrs, rsgrd, p1cons)
   end
 end
 

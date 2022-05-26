@@ -1,7 +1,11 @@
 function SolveModel!(MS::ModelSolution)
-
   LastPeriod!(MS)
-  FirstPeriod!(MS)
+  if MS.np.p1cons == true
+    FirstPeriod!(MS)
+  else
+    FirstPeriod_nocons!(MS)
+  end
+
 
   return MS
 
@@ -73,6 +77,46 @@ function FirstPeriod!(MS::ModelSolution)
     end
     MS.c[ix,ih,ia] = findc1(xv,y,s,b,mp.q)
     MS.V[ix,ih,ia] = vtmp[imax]
+  end
+  end
+
+end
+
+
+function FirstPeriod_nocons!(MS::ModelSolution)
+  np = MS.np
+  mp = MS.mp
+
+  αgrd = range(0.0,stop=1.0,length=np.nα)
+  vtmp = fill(0.0,(np.nα))
+
+  ia = 1
+  y = np.ygrd[ia]
+  for ih in eachindex(np.hgrd)
+    Vnxt_intrp = CubicSplineInterpolation((np.xgrd,),MS.V[:,ih,ia+1],extrapolation_bc=Interpolations.Line())
+  for (ix,xv) in enumerate(np.xgrd)
+    vtmp .= -Inf64
+    sav = xv + y
+    for (iα,α) in enumerate(αgrd)
+      b = sav*(1.0-α)
+      s = sav*α
+      if sav > 0
+        vtmp[iα] = 0.0
+        for irs = 1:np.nq
+          vtmp[iα] += mp.β*np.πrs[irs]*Vnxt_intrp(xp(b,s,mp.r,np.rsgrd[irs]))
+        end
+      end
+    end
+
+    iα = argmax(vtmp)
+    MS.α[ix,ih] = α = αgrd[iα]
+    MS.s[ix,ih] = s = sav*α
+    MS.b[ix,ih] = b = sav*(1.0-α)
+    if sav == 0.0 # If there is no saving, portfolio weight is'nt defined
+      MS.α[ix,ih] = NaN64
+    end
+    MS.c[ix,ih,ia] = findc1(xv,y,s,b,mp.q)
+    MS.V[ix,ih,ia] = vtmp[iα]
   end
   end
 
