@@ -73,8 +73,7 @@ struct NumPar
 
     # Use expectation package
     E = expectation(Normal(mp.μ,mp.σ),n=nq)
-    rsgrd=nodes(E) # Return grid
-    rsgrd=max.(-1.0,rsgrd) # Limited liability
+    rsgrd=exp.(nodes(E)).-1 # Return grid
     πrs=weights(E) # PMF
     @assert sum(πrs)≈1 # Check that PMF sums to one
 
