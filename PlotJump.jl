@@ -8,7 +8,8 @@ include("src/EasyStocks.jl")
 using CairoMakie # For plotting
 
 mp = ModPar(q=0.0,ψ=0.0,xstar=2.0,η=0.)
-np = NumPar(mp,nx=60,nsav=120,nq=15,nα=81,nh=1,ygrd=[0.0,1.0])
+np = NumPar(mp,nx=60,nsav=120,nq=15,nα=81,nh=1,ygrd=[0.0,0.0])
+np.hgrd.=0.0
 MS1 = ModelSolution(mp,np)
 @time SolveModel!(MS1)
 mp = ModPar(q=mp.q,ψ=0.015,xstar=mp.xstar,η =mp.η)
