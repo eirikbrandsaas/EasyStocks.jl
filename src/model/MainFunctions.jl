@@ -103,7 +103,8 @@ function FirstPeriod_nocons!(MS::ModelSolution)
       if sav > 0
         vtmp[iα] = 0.0
         for irs = 1:np.nq
-          vtmp[iα] += mp.β*np.πrs[irs]*Vnxt_intrp(xp(b,s,mp.r,np.rsgrd[irs]))
+          xpn = xp(b,s,mp.r,np.rsgrd[irs])
+          vtmp[iα] += mp.β*np.πrs[irs]*(Vnxt_intrp(xpn))
         end
       end
     end

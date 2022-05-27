@@ -9,13 +9,12 @@ using CairoMakie # For plotting
 
 mp = ModPar(q=0.0,ψ=0.0,xstar=4.0,η=0.)
 np = NumPar(mp,nx=500,nsav=1,nq=2501,nα=101,nh=1,ygrd=[0.0,0.0],p1cons=false)
+np = NumPar(mp,nx=500,nsav=1,nq=31,nα=51,nh=1,ygrd=[0.0,0.0],p1cons=false)
 np.hgrd .= 0
 MS1 = ModelSolution(mp,np)
 @time SolveModel!(MS1)
 mp = ModPar(q=mp.q,ψ=0.025,xstar=mp.xstar,η =mp.η)
 MS2 = ModelSolution(mp,np)
-# np.πrs[1] = 0.002
-# np.πrs[:] = np.πrs/sum(np.πrs)
 @time SolveModel!(MS2)
 
 # np.πrs[1] = 0.002
