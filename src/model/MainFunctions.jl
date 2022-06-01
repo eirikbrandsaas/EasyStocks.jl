@@ -96,8 +96,9 @@ function FirstPeriod_nocons!(MS::ModelSolution)
     Vnxt_intrp = CubicSplineInterpolation((np.xgrd,),MS.V[:,ih,ia+1],extrapolation_bc=Interpolations.Line())
   for (ix,xv) in enumerate(np.xgrd)
     vtmp .= -Inf64
-    sav = xv + y
+    saving = xv + y
     for (iα,α) in enumerate(αgrd)
+      sav = saving - mp.q*part(α)
       b = sav*(1.0-α)
       s = sav*α
       if sav > 0
@@ -111,6 +112,7 @@ function FirstPeriod_nocons!(MS::ModelSolution)
 
     iα = argmax(vtmp)
     MS.α[ix,ih] = α = αgrd[iα]
+    sav = saving - mp.q*part(α)
     MS.s[ix,ih] = s = sav*α
     MS.b[ix,ih] = b = sav*(1.0-α)
     if sav == 0.0 # If there is no saving, portfolio weight is'nt defined
